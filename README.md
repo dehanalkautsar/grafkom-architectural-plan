@@ -4,4 +4,4 @@ This repository is dedicated to working on IF3260 Computer Graphics's First Proj
 ### Nama Anggota Kelompok 17: (Nama / NIM / github username)
 - Nabilah Erfariani / 13519181 / nabilaherfar
 - Muhammad Dehan Al Kautsar / 13519200 / dehanalkautsar
-- Raffi Fadhlurrahman Putra R. / 13519219 / 
+- Raffi Fadhlurrahman Putra R. / 13519219 / raffifpr
