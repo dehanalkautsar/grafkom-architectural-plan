@@ -1,0 +1,12 @@
+body {
+  background-color: lightblue;
+  color: #333;
+}
+
+canvas {
+  border: 1px solid #000;
+  background-color: #fff;
+  float: left;
+  margin-right: 10px;
+  cursor: crosshair;
+}
