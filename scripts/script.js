@@ -51,14 +51,14 @@ function main() {
   // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   // put geometry data into buffer
-  setGeometry(gl);
+  // setGeometry(gl);
 
   // create a buffer to put colors in
   var colorBuffer = gl.createBuffer();
   // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = colorBuffer)
   gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
   // set the colors
-  setColors(gl);
+  // setColors(gl);
 
   drawScene();
 
@@ -76,12 +76,11 @@ function main() {
     // Bind the position buffer.
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-    var size = 2; // 2 components per iteration
-    var type = gl.FLOAT; // the data is 32bit floats
+    var size = 2; // 2 components per iteration (x, y)
+    var type = gl.FLOAT; //types of element
     var normalize = gl.FALSE; // dont normalize the data
-    var stride = 0; // 0 = move forward size * sizeof(type) each iteration to get the next position
-    var offset = 0; // start at the beginning of the buffer
-
+    var stride = 5 * Float32Array.BYTES_PER_ELEMENT; // Size of an individual vertex
+    var offset = 0; // Offset from the beginning of a single vertex to this attribute
     gl.vertexAttribPointer(
       positionLocation,
       size,
@@ -96,11 +95,11 @@ function main() {
     // Bind the color buffer.
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     // Tell the color attribute how to get data out of colorBuffer (ARRAY_BUFFER)
-    var size = 4; // 4 components per iteration
-    var type = gl.FLOAT; // the data is 32bit floats
-    var normalize = gl.FALSE; // don't normalize the data
-    var stride = 0; // 0 = move forward size * sizeof(type) each iteration to get the next position
-    var offset = 0; // start at the beginning of the buffer
+    var size = 3; // 2 components per iteration (r, g, b)
+    var type = gl.FLOAT; //types of element
+    var normalize = gl.FALSE; // dont normalize the data
+    var stride = 5 * Float32Array.BYTES_PER_ELEMENT; // Size of an individual vertex
+    var offset = 2 * Float32Array.BYTES_PER_ELEMENT; // Offset from the beginning of a single vertex to this attribute
     gl.vertexAttribPointer(
       colorLocation,
       size,
@@ -109,64 +108,7 @@ function main() {
       stride,
       offset
     );
-
-    // draw the geometry
-    var primitiveType = gl.TRIANGLES;
-    var offset = 0;
-    var count = 6;
-    gl.drawArrays(primitiveType, offset, count);
   }
-}
-
-function setGeometry(gl) {
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array([
-      -0.15, -0.1, 0.15, -0.1, -0.15, 0.1, 0.15, -0.1, -0.15, 0.1, 0.15, 0.1,
-    ]),
-    gl.STATIC_DRAW
-  );
-}
-
-function setColors(gl) {
-  // Pick 2 random colors.
-  var r1 = Math.random();
-  var b1 = Math.random();
-  var g1 = Math.random();
-  var r2 = Math.random();
-  var b2 = Math.random();
-  var g2 = Math.random();
-
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array([
-      r1,
-      b1,
-      g1,
-      1,
-      r1,
-      b1,
-      g1,
-      1,
-      r1,
-      b1,
-      g1,
-      1,
-      r2,
-      b2,
-      g2,
-      1,
-      r2,
-      b2,
-      g2,
-      1,
-      r2,
-      b2,
-      g2,
-      1,
-    ]),
-    gl.STATIC_DRAW
-  );
 }
 
 main();
