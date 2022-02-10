@@ -88,6 +88,7 @@ canvas.addEventListener("mousemove", function (e) {
   if (current.dragging) {
     // record mouse position
     recordMouse(e);
+    redrawCanvas();
 
     //checking if current.shape is polygon or not
     if (current.shape != Polygon) {
@@ -109,7 +110,6 @@ canvas.addEventListener("mousemove", function (e) {
         current.polygon_coordinates.concat([mouseX, mouseY])
       ).draw();
     }
-    redrawCanvas();
   }
 });
 
