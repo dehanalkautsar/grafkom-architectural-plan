@@ -114,9 +114,9 @@ class Polygon extends Shape {
   }
   // draw method
   draw() {
-    poly_vertices = [[this.x1, this.y1]];
-    for (let point of this.points) {
-      poly_vertices.push([point[0], point[1]]);
+    var poly_vertices = [];
+    for (let i = 0; i < this.points.length; i += 2) {
+      poly_vertices.push([this.points[i], this.points[i + 1]]);
     }
     this.materialized(poly_vertices, gl.LINE_LOOP);
   }

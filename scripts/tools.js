@@ -34,5 +34,7 @@ function setShape(shape) {
       ? Square
       : shape == "Rectangle"
       ? Rectangle
+      : shape == "Polygon"
+      ? Polygon
       : (console.log("NO SUCH SHAPE"), Line);
 }
