@@ -57,6 +57,7 @@ canvas.addEventListener("mousedown", function (e) {
     // check if shape == polygon
     if (current.shape == Polygon) {
       current.polygon_mode = true;
+      // concat first coordinate to polygon_coordinates
       current.polygon_coordinates = current.polygon_coordinates.concat([
         current.origin_x,
         current.origin_y,
@@ -68,6 +69,7 @@ canvas.addEventListener("mousedown", function (e) {
     // check if shape == polygon
     if (current.shape == Polygon) {
       redrawCanvas();
+      // draw a line to make a polygon easier to see by user
       new Line(
         current.temp_vert[0],
         current.temp_vert[1],
@@ -98,19 +100,15 @@ canvas.addEventListener("mouseup", function (e) {
     //curr.shape == Polygon
     current.polygon_mode = false;
     // check if mouse is close to origin x & y
-    console.log(current.origin_x, current.origin_y);
     if (
       mouseX < current.origin_x + 0.1 &&
       mouseX > current.origin_x - 0.1 &&
       mouseY < current.origin_y + 0.1 &&
       mouseY > current.origin_y - 0.1
     ) {
-      console.log(current.polygon_coordinates);
       // delete line according to polygon_coordinates
-      console.log(current.polygon_coordinates);
       for (let i = 0; i < (current.polygon_coordinates.length - 2) / 2; i++) {
         shapes.pop();
-        console.log("pop");
       }
       // add polygon to shapes
       shapes.push(
@@ -132,7 +130,7 @@ canvas.addEventListener("mouseup", function (e) {
         mouseY,
       ]);
 
-      //push line (buat nampilin sementara)
+      //push line (for temporary display)
       shapes.push(
         new Line(
           current.temp_vert[0],
@@ -143,12 +141,10 @@ canvas.addEventListener("mouseup", function (e) {
           false
         )
       );
-      console.log(current.temp_vert[0], current.temp_vert[1], mouseX, mouseY);
       current.temp_vert = [mouseX, mouseY];
     }
   }
 
-  console.log(shapes.length);
   redrawCanvas();
   current.focus = shapes.length - 1;
 });
@@ -180,15 +176,6 @@ canvas.addEventListener("mousemove", function (e) {
           current.color
         ).draw();
       }
-
-      // new Polygon(
-      //   current.origin_x,
-      //   current.origin_y,
-      //   mouseX,
-      //   mouseY,
-      //   current.color,
-      //   current.polygon_coordinates.concat([mouseX, mouseY])
-      // ).draw();
     }
   }
 });
