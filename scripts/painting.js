@@ -115,9 +115,6 @@ canvas.addEventListener("mousemove", function (e) {
 
 document.getElementById("shape").addEventListener("click", function (e) {
   shape = document.getElementById("shape").value;
-  // shape == "basic" ?
-  //     document.getElementById("sides").removeAttribute("hidden") :
-  //     document.getElementById("sides").setAttribute("hidden", true);
   setShape(shape);
 });
 // Pop last shape
