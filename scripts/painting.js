@@ -183,6 +183,11 @@ canvas.addEventListener("mousemove", function (e) {
 document.getElementById("shape").addEventListener("click", function (e) {
   shape = document.getElementById("shape").value;
   setShape(shape);
+  // reset polygon things
+  if (shape != Polygon) {
+    current.polygon_mode = false;
+    current.polygon_coordinates = [];
+  }
 });
 // Pop last shape
 document.getElementById("delLast").addEventListener("click", function (e) {
