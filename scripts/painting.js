@@ -2,7 +2,7 @@
 //|                                DISINI BUAT DRAWING MODE KAYAK FUNGSI2 ONCLICK, DLL                                    //
 //|                                                                                                                       //
 /* --------------------------------------------------------------------------------------------------------------------- */
-
+var gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
 // initialize shapes array. This array will hold all of our different shapes that we will draw in canvas
 var shapes = [];
 
@@ -21,18 +21,15 @@ var current = {
   polygon_coordinates: [],
 };
 
-console.log(current);
-
 // function redrawCanvas() -> void
 // Draws all of the shapes in the shapes array
 function redrawCanvas() {
   // clear the canvas
-  // gl.clearColor(0.95, 0.95, 0.95, 1);
+  gl.clearColor(0.95, 0.95, 0.95, 1);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   // draw all of the shapes
   for (let shape of shapes) {
-    console.log(shape);
     shape.draw();
   }
 }
@@ -46,7 +43,7 @@ current.color = hexToColor(document.getElementById("color").value);
 
 // looking for a mousedown
 canvas.addEventListener("mousedown", function (e) {
-  // console.log("down");
+  current.color = hexToColor(document.getElementById("color").value);
   current.dragging = true;
   recordMouse(e);
   current.origin_x = mouseX;
@@ -55,7 +52,6 @@ canvas.addEventListener("mousedown", function (e) {
 
 // looking for a mouseup
 canvas.addEventListener("mouseup", function (e) {
-  console.log("up");
   current.dragging = false;
   //checking if current.shape is polygon or not
   if (current.shape != Polygon) {
@@ -69,7 +65,6 @@ canvas.addEventListener("mouseup", function (e) {
         false
       )
     );
-    console.log(shapes);
   } else {
     //curr.shape == Polygon
     current.polygon_coordinates.push([]);
@@ -93,8 +88,7 @@ canvas.addEventListener("mousemove", function (e) {
   if (current.dragging) {
     // record mouse position
     recordMouse(e);
-    console.log(mouseX, mouseY);
-    redrawCanvas();
+
     //checking if current.shape is polygon or not
     if (current.shape != Polygon) {
       new current.shape(
@@ -115,5 +109,21 @@ canvas.addEventListener("mousemove", function (e) {
         current.polygon_coordinates.concat([mouseX, mouseY])
       ).draw();
     }
+    redrawCanvas();
   }
+});
+
+document.getElementById("shape").addEventListener("click", function (e) {
+  shape = document.getElementById("shape").value;
+  // shape == "basic" ?
+  //     document.getElementById("sides").removeAttribute("hidden") :
+  //     document.getElementById("sides").setAttribute("hidden", true);
+  setShape(shape);
+});
+// Pop last shape
+document.getElementById("delLast").addEventListener("click", function (e) {
+  shapes.pop();
+  current.focus = shapes.length - 1;
+  current.draw_mode = false;
+  redrawCanvas();
 });

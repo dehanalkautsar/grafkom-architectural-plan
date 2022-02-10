@@ -31,12 +31,10 @@ class Shape {
         this.color.b
       );
     }
-    console.log(vertices);
-    // console.log(points);
     // buffer the data
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     // draw the geometry
-    var vertexCount = Math.floor(points.length);
+    var vertexCount = points.length;
     gl.drawArrays(gl_shape, 0, vertexCount);
   }
 }

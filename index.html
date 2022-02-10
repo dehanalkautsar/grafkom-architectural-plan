@@ -17,10 +17,11 @@
             <option value="Polygon">Polygon</option>
           </select>
           <input type="color" id="color" value="#000000" />
+          <button id="delLast">delLast</button>
         </div>
       </div>
       <div class="row">
-          <canvas id="canvas" width="550" height="550"></canvas>
+          <canvas id="canvas" width="600" height="600"></canvas>
           <h3>Help!</h3>
 					<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia ea laborum
 						mollitia molestias? Error, aperiam! Odit corporis labore totam
@@ -29,17 +30,16 @@
         </div>
       </div>
 
-      <!-- per-script-an -->
       <script id="vertex-shader-2d" type="x-shader/x-vertex">
         precision mediump float;
 
-        attribute vec2 a_position;
+        attribute vec2 vertPosition;
         attribute vec3 vertColor;
         varying vec3 fragColor;
         void main()
         {
           fragColor = vertColor;
-          gl_Position = vec4(a_position, 0.0, 1.0);
+          gl_Position = vec4(vertPosition, 0.0, 1.0);
         }
       </script>
       <script id="fragment-shader-2d" type="x-shader/x-fragment">
@@ -53,9 +53,10 @@
       </script>
       <script src="./scripts/webgl-utils.js"></script>
       <script src="./scripts/script.js"></script>
-      <script src="./scripts/tools.js"></script>
       <script src="./scripts/shapes.js"></script>
+      <script src="./scripts/tools.js"></script>
       <script src="./scripts/painting.js"></script>
+      <!-- <script>redrawCanvas();</script> -->
     </div>
   </body>
 </html>

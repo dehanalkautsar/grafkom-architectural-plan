@@ -1,6 +1,7 @@
 // console.log("Hello World");
-"use strict";
+// "use strict";
 
+// get canvas from html
 var canvas = document.getElementById("canvas");
 var gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
 if (!gl) {
@@ -12,17 +13,21 @@ if (!gl) {
   console.log(
     "WebGl not supported on this browser, trying to fall back on experimental WebGL"
   );
+  gl = canvas.getContext("experimental-webgl");
 }
 if (!gl) {
-  console.log("your browser does not support WebGL");
+  alert("your browser does not support WebGL");
 }
 
-function main() {
-  // Get A WebGL context
-  /** @type {HTMLCanvasElement} */
+var program;
+
+function initWebGL() {
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.clearColor(0.95, 0.95, 0.95, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   //set up GLSL program
-  var program = webglUtils.createProgramFromScripts(gl, [
+  program = webglUtils.createProgramFromScripts(gl, [
     "vertex-shader-2d",
     "fragment-shader-2d",
   ]);
@@ -40,84 +45,38 @@ function main() {
   } else {
     console.log("all good until validating program");
   }
-
-  // look up where the vertex data needs to go.
-  var positionLocation = gl.getAttribLocation(program, "a_position");
-  // look up uniform locations
-  var colorLocation = gl.getAttribLocation(program, "vertColor"); //it should be uniform but, hey somehow it is work?!?! x_x
-
-  // Create a buffer to put positions in
-  var positionBuffer = gl.createBuffer();
-  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  // put geometry data into buffer
-  setGeometry(gl);
-
-  // create a buffer to put colors in
-  var colorBuffer = gl.createBuffer();
-  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = colorBuffer)
-  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-  // set the colors
-  // setColors(gl);
-
-  drawScene();
-
-  function drawScene() {
-    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-    // tell WebGL how to convert from clip space to pixels
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    // Clear the canvas
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    // Tell it to use our program (pair of shaders)
-    gl.useProgram(program);
-
-    // Turn on the vertex attributes
-    gl.enableVertexAttribArray(positionLocation);
-    // Bind the position buffer.
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-    var size = 2; // 2 components per iteration (x, y)
-    var type = gl.FLOAT; //types of element
-    var normalize = gl.FALSE; // dont normalize the data
-    var stride = 5 * Float32Array.BYTES_PER_ELEMENT; // Size of an individual vertex
-    var offset = 0; // Offset from the beginning of a single vertex to this attribute
-    gl.vertexAttribPointer(
-      positionLocation,
-      size,
-      type,
-      normalize,
-      stride,
-      offset
-    );
-
-    // Turn on the colors attribute
-    gl.enableVertexAttribArray(colorLocation);
-    // Bind the color buffer.
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    // Tell the color attribute how to get data out of colorBuffer (ARRAY_BUFFER)
-    var size = 3; // 3 components per iteration (r, g, b)
-    var type = gl.FLOAT; //types of element
-    var normalize = gl.FALSE; // dont normalize the data
-    var stride = 5 * Float32Array.BYTES_PER_ELEMENT; // Size of an individual vertex
-    var offset = 2 * Float32Array.BYTES_PER_ELEMENT; // Offset from the beginning of a single vertex to this attribute
-    gl.vertexAttribPointer(
-      colorLocation,
-      size,
-      type,
-      normalize,
-      stride,
-      offset
-    );
-    gl.drawArrays(gl.LINE_STRIP, 0, 2);
-  }
 }
 
-function setGeometry(gl) {
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array([-0.2, -0.2, 0.0, 1.0, 0.0, 0.2, 0.2, 0.0, 1.0, 0.0]),
-    gl.STATIC_DRAW
-  );
-}
+initWebGL();
 
-main();
+//create buffer
+var vertexBufferObject = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, vertexBufferObject);
+
+//get attribute location
+var positionAttribLocation = gl.getAttribLocation(program, "vertPosition");
+var colorAttribLocation = gl.getAttribLocation(program, "vertColor");
+
+//tell WebGL how to read the buffer
+gl.vertexAttribPointer(
+  positionAttribLocation, //location
+  2, //size
+  gl.FLOAT, //type
+  gl.FALSE, //normalize
+  5 * Float32Array.BYTES_PER_ELEMENT, //stride
+  0 //offset
+);
+
+gl.vertexAttribPointer(
+  colorAttribLocation,
+  3,
+  gl.FLOAT,
+  gl.FALSE,
+  5 * Float32Array.BYTES_PER_ELEMENT,
+  2 * Float32Array.BYTES_PER_ELEMENT
+);
+
+gl.enableVertexAttribArray(positionAttribLocation);
+gl.enableVertexAttribArray(colorAttribLocation);
+
+gl.useProgram(program);
