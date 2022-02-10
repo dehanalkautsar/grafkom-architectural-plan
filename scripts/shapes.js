@@ -9,7 +9,7 @@ class Color {
 
 // shape superclass
 class Shape {
-  constructor(x1, y1, x2, y2, color) {
+  constructor(x1, y1, x2, y2, color, extraparameter = false) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -31,6 +31,8 @@ class Shape {
         this.color.b
       );
     }
+    console.log(vertices);
+    // console.log(points);
     // buffer the data
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     // draw the geometry
@@ -41,8 +43,8 @@ class Shape {
 
 // line class
 class Line extends Shape {
-  constructor(x1, y1, x2, y2, color) {
-    super(x1, y1, x2, y2, color);
+  constructor(x1, y1, x2, y2, color, dummy) {
+    super(x1, y1, x2, y2, color, false);
   }
   // draw method
   draw() {

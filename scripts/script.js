@@ -1,25 +1,25 @@
 // console.log("Hello World");
 "use strict";
 
+var canvas = document.getElementById("canvas");
+var gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
+if (!gl) {
+  console.log("Failed to get the rendering context for WebGL");
+}
+
+//if WebGL cant load the context
+if (!gl) {
+  console.log(
+    "WebGl not supported on this browser, trying to fall back on experimental WebGL"
+  );
+}
+if (!gl) {
+  console.log("your browser does not support WebGL");
+}
+
 function main() {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
-  var canvas = document.getElementById("canvas");
-  var gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
-  if (!gl) {
-    console.log("Failed to get the rendering context for WebGL");
-    return;
-  }
-
-  //if WebGL cant load the context
-  if (!gl) {
-    console.log(
-      "WebGl not supported on this browser, trying to fall back on experimental WebGL"
-    );
-  }
-  if (!gl) {
-    console.log("your browser does not support WebGL");
-  }
 
   //set up GLSL program
   var program = webglUtils.createProgramFromScripts(gl, [
@@ -51,7 +51,7 @@ function main() {
   // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   // put geometry data into buffer
-  // setGeometry(gl);
+  setGeometry(gl);
 
   // create a buffer to put colors in
   var colorBuffer = gl.createBuffer();
@@ -70,9 +70,9 @@ function main() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
+
     // Turn on the vertex attributes
     gl.enableVertexAttribArray(positionLocation);
-
     // Bind the position buffer.
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
@@ -95,7 +95,7 @@ function main() {
     // Bind the color buffer.
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     // Tell the color attribute how to get data out of colorBuffer (ARRAY_BUFFER)
-    var size = 3; // 2 components per iteration (r, g, b)
+    var size = 3; // 3 components per iteration (r, g, b)
     var type = gl.FLOAT; //types of element
     var normalize = gl.FALSE; // dont normalize the data
     var stride = 5 * Float32Array.BYTES_PER_ELEMENT; // Size of an individual vertex
@@ -108,12 +108,16 @@ function main() {
       stride,
       offset
     );
+    gl.drawArrays(gl.LINE_STRIP, 0, 2);
   }
 }
 
-main();
+function setGeometry(gl) {
+  gl.bufferData(
+    gl.ARRAY_BUFFER,
+    new Float32Array([-0.2, -0.2, 0.0, 1.0, 0.0, 0.2, 0.2, 0.0, 1.0, 0.0]),
+    gl.STATIC_DRAW
+  );
+}
 
-/* --------------------------------------------------------------------------------------------------------------------- */
-//|                                DISINI BUAT DRAWING MODE KAYAK FUNGSI2 ONCLICK, DLL                                    //
-//|                                                                                                                       //
-/* --------------------------------------------------------------------------------------------------------------------- */
+main();
