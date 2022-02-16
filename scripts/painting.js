@@ -34,6 +34,7 @@ function redrawCanvas() {
   for (let shape of shapes) {
     shape.draw();
   }
+  console.log(shapes);
 }
 
 // init redrawCanvas at the first time
