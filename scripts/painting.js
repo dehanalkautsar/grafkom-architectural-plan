@@ -243,13 +243,18 @@ canvas.addEventListener("mousedown", function (e) {
       if (shapes[shape].name == "Line") {
         // get the distance between mouse and the shape using pythagoeran theorem
         temp_dist = Math.min(
-          Math.sqrt((mouseX - shape.x1) ** 2 + (mouseY - shape.y1) ** 2),
-          Math.sqrt((mouseX - shape.x2) ** 2 + (mouseY - shape.y2) ** 2)
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          ),
+          Math.sqrt(
+            (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y2) ** 2
+          )
         );
         // set change_vertex to smallest distance
         if (
-          Math.sqrt((mouseX - shape.x1) ** 2 + (mouseY - shape.y1) ** 2) ==
-          temp_dist
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          ) == temp_dist
         ) {
           current.change_vertex = 0;
         } else {
@@ -257,37 +262,50 @@ canvas.addEventListener("mousedown", function (e) {
         }
       }
       // second case: shape is Square
-      else if (shape == Square) {
+      else if (shapes[shape].name == "Square") {
         // get the distance between mouse and the shape using pythagoeran theorem
         temp_dist = Math.min(
-          Math.sqrt((mouseX - shape.x1) ** 2 + (mouseY - shape.y1) ** 2),
           Math.sqrt(
-            (mouseX - shape.x1) ** 2 +
-              (mouseY - (shape.y1 - (shape.x2 - shape.x1))) ** 2
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          ),
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 +
+              (mouseY -
+                (shapes[shape].y1 - (shapes[shape].x2 - shapes[shape].x1))) **
+                2
           ), //y1 - (x2 - x1)
           Math.sqrt(
-            (mouseX - shape.x2) ** 2 +
-              (mouseY - (shape.y1 - (shape.x2 - shape.x1))) ** 2
+            (mouseX - shapes[shape].x2) ** 2 +
+              (mouseY -
+                (shapes[shape].y1 - (shapes[shape].x2 - shapes[shape].x1))) **
+                2
           ), //y1 - (x2 - x1)
-          Math.sqrt((mouseX - shape.x2) ** 2 + (mouseY - shape.y1) ** 2)
+          Math.sqrt(
+            (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          )
         );
         // set change_vertex to smallest distance
         if (
-          Math.sqrt((mouseX - shape.x1) ** 2 + (mouseY - shape.y1) ** 2) ==
-          temp_dist
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          ) == temp_dist
         ) {
           current.change_vertex = 0;
         } else if (
           Math.sqrt(
-            (mouseX - shape.x1) ** 2 +
-              (mouseY - (shape.y1 - (shape.x2 - shape.x1))) ** 2
+            (mouseX - shapes[shape].x1) ** 2 +
+              (mouseY -
+                (shapes[shape].y1 - (shapes[shape].x2 - shapes[shape].x1))) **
+                2
           ) == temp_dist
         ) {
           current.change_vertex = 1;
         } else if (
           Math.sqrt(
-            (mouseX - shape.x2) ** 2 +
-              (mouseY - (shape.y1 - (shape.x2 - shape.x1))) ** 2
+            (mouseX - shapes[shape].x2) ** 2 +
+              (mouseY -
+                (shapes[shape].y1 - (shapes[shape].x2 - shapes[shape].x1))) **
+                2
           ) == temp_dist
         ) {
           current.change_vertex = 2;
@@ -296,27 +314,38 @@ canvas.addEventListener("mousedown", function (e) {
         }
       }
       // third case: shape is Rectangle
-      else if (shape == Rectangle) {
+      else if (shapes[shape].name == "Rectangle") {
         temp_dist = Math.min(
-          Math.sqrt((mouseX - shape.x1) ** 2 + (mouseY - shape.y1) ** 2),
-          Math.sqrt((mouseX - shape.x1) ** 2 + (mouseY - shape.y2) ** 2),
-          Math.sqrt((mouseX - shape.x2) ** 2 + (mouseY - shape.y2) ** 2),
-          Math.sqrt((mouseX - shape.x2) ** 2 + (mouseY - shape.y1) ** 2)
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y2) ** 2
+          ),
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          ),
+          Math.sqrt(
+            (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y2) ** 2
+          ),
+          Math.sqrt(
+            (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          )
         );
         // set change_vertex to smallest distance
         if (
-          Math.sqrt((mouseX - shape.x1) ** 2 + (mouseY - shape.y1) ** 2) ==
-          temp_dist
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          ) == temp_dist
         ) {
           current.change_vertex = 0;
         } else if (
-          Math.sqrt((mouseX - shape.x1) ** 2 + (mouseY - shape.y2) ** 2) ==
-          temp_dist
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y2) ** 2
+          ) == temp_dist
         ) {
           current.change_vertex = 1;
         } else if (
-          Math.sqrt((mouseX - shape.x2) ** 2 + (mouseY - shape.y2) ** 2) ==
-          temp_dist
+          Math.sqrt(
+            (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y2) ** 2
+          ) == temp_dist
         ) {
           current.change_vertex = 2;
         } else {
@@ -329,16 +358,16 @@ canvas.addEventListener("mousedown", function (e) {
         for (let i = 0; i <= shapes[shape].points.length; i += 2) {
           temp_dist = Math.min(
             Math.sqrt(
-              (mouseX - shape.points[i]) ** 2 +
-                (mouseY - shape.points[i + 1]) ** 2
+              (mouseX - shapes[shape].points[i]) ** 2 +
+                (mouseY - shapes[shape].points[i + 1]) ** 2
             ),
             temp_dist
           );
           if (
             temp_dist ==
             Math.sqrt(
-              (mouseX - shape.points[i]) ** 2 +
-                (mouseY - shape.points[i + 1]) ** 2
+              (mouseX - shapes[shape].points[i]) ** 2 +
+                (mouseY - shapes[shape].points[i + 1]) ** 2
             )
           ) {
             current.change_vertex = i;
