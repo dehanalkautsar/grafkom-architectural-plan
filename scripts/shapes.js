@@ -9,12 +9,13 @@ class Color {
 
 // shape superclass
 class Shape {
-  constructor(x1, y1, x2, y2, color, extraparameter = false) {
+  constructor(x1, y1, x2, y2, color, name, extraparameter = false) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
     this.y2 = y2;
     this.color = color;
+    this.name = name;
   }
 
   // materialized function
@@ -42,7 +43,7 @@ class Shape {
 // line class
 class Line extends Shape {
   constructor(x1, y1, x2, y2, color, dummy) {
-    super(x1, y1, x2, y2, color, false);
+    super(x1, y1, x2, y2, color, "Line", false);
   }
   // draw method
   draw() {
@@ -63,7 +64,7 @@ class Line extends Shape {
 // square class
 class Square extends Shape {
   constructor(x1, y1, x2, y2, color) {
-    super(x1, y1, x2, y2, color);
+    super(x1, y1, x2, y2, color, "Square");
   }
   // draw method
   draw() {
@@ -74,8 +75,8 @@ class Square extends Shape {
     this.materialized(
       [
         [x1, y1],
-        [x1, y2],
-        [x2, y2],
+        [x1, y1 - (x2 - x1)],
+        [x2, y1 - (x2 - x1)],
         [x2, y1],
       ],
       gl.LINE_LOOP
@@ -86,7 +87,7 @@ class Square extends Shape {
 // rectangle class
 class Rectangle extends Shape {
   constructor(x1, y1, x2, y2, color) {
-    super(x1, y1, x2, y2, color);
+    super(x1, y1, x2, y2, color, "Rectangle");
   }
   // draw method
   draw() {
@@ -109,7 +110,7 @@ class Rectangle extends Shape {
 // polygon class
 class Polygon extends Shape {
   constructor(x1, y1, x2, y2, color, points) {
-    super(x1, y1, 0, 0, color);
+    super(x1, y1, 0, 0, color, "Polygon");
     this.points = points;
   }
   // draw method

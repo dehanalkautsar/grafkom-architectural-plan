@@ -10,6 +10,10 @@
       <h2>2D Web Based CAD (Computer-Aided Design)</h2>
       <div class="row">
         <div class="col">
+          <select id="mode">
+            <option value="Draw">Draw Mode</option>
+            <option value="Select">Select Mode</option>
+          </select>
           <select id="shape">
             <option value="Line">Garis</option>
             <option value="Square">Persegi</option>
@@ -21,7 +25,7 @@
         </div>
       </div>
       <div class="row">
-          <canvas id="canvas" width="667" height="500"></canvas>
+          <canvas id="canvas" width="667" height="667"></canvas>
           <h3>Help!</h3>
 					<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia ea laborum
 						mollitia molestias? Error, aperiam! Odit corporis labore totam

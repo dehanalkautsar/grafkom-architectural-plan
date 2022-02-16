@@ -38,3 +38,12 @@ function setShape(shape) {
       ? Polygon
       : (console.log("NO SUCH SHAPE"), Line);
 }
+
+function setMode(mode) {
+  current.mode =
+    mode == "Draw"
+      ? "Draw"
+      : mode == "Select"
+      ? "Select"
+      : (console.log("NO SUCH MODE"), "Draw");
+}
