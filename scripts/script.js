@@ -1,6 +1,3 @@
-// console.log("Hello World");
-// "use strict";
-
 // get canvas from html
 var canvas = document.getElementById("canvas");
 var gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
@@ -13,6 +10,7 @@ if (!gl) {
   console.log(
     "WebGl not supported on this browser, trying to fall back on experimental WebGL"
   );
+  //try to load experimental webgl
   gl = canvas.getContext("experimental-webgl");
 }
 if (!gl) {
@@ -22,6 +20,7 @@ if (!gl) {
 var program;
 
 function initWebGL() {
+  // set viewport, clear color
   gl.viewport(0, 0, canvas.width, canvas.height);
   gl.clearColor(0.95, 0.95, 0.95, 1);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -32,6 +31,7 @@ function initWebGL() {
     "fragment-shader-2d",
   ]);
 
+  // link and validate the program
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
     console.error("ERROR linking program!", gl.getProgramInfoLog(program));

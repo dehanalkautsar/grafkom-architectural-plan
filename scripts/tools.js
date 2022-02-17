@@ -2,12 +2,14 @@
 
 // recordMouse(event) -> void
 // record mouse coordinates
+// this function will record the mouse coordinates
 function recordMouse(event) {
   mouseX = (event.offsetX / canvas.clientWidth) * 2 - 1;
   mouseY = (1 - event.offsetY / canvas.clientHeight) * 2 - 1;
 }
 
 // hexToColor: string -> color
+// this function will convert a hex color to a color
 function hexToColor(hex) {
   var c;
   if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
@@ -25,7 +27,8 @@ function hexToColor(hex) {
   throw new Error("Bad Hex");
 }
 
-// Upon an unrecognized shape, draw a line for some reason
+// setShape: string -> void
+// this function will set the current shape to the shape that is passed in
 function setShape(shape) {
   current.shape =
     shape == "Line"
@@ -39,6 +42,8 @@ function setShape(shape) {
       : (console.log("NO SUCH SHAPE"), Line);
 }
 
+// setMode: string -> void
+// this function will set the current mode to the mode that is passed in
 function setMode(mode) {
   current.mode =
     mode == "Draw"

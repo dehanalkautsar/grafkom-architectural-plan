@@ -74,6 +74,7 @@ class Square extends Shape {
     let x2 = this.x2;
     let y2 = this.y2;
 
+    // find the difference between x1 and x2
     let dx = x2 - x1;
     let dy = y2 - y1;
     // select the minimum value of dx and dy
@@ -115,9 +116,6 @@ class Rectangle extends Shape {
     let x2 = this.x2;
     let y2 = this.y2;
 
-    let dx = x2 - x1;
-    let dy = y2 - y1;
-
     this.position = [
       [x1, y1],
       [x1, y2],
@@ -137,6 +135,7 @@ class Polygon extends Shape {
   }
   // draw method
   draw() {
+    // init array of vertices that will be used to draw the polygon
     var poly_vertices = [];
     for (let i = 0; i < this.points.length; i += 2) {
       poly_vertices.push([this.points[i], this.points[i + 1]]);

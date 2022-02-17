@@ -10,8 +10,8 @@ var shapes = [];
 var mouseX = 0;
 var mouseY = 0;
 
-// deleteShape is var for deleting when we want to redraw the transformation shape
-var deleteShape = false;
+// idx_shape is a var that contains the index of the shape that is currently selected (that will be edited)
+var idx_shape = -1;
 
 // current state
 var current = {
@@ -21,8 +21,8 @@ var current = {
   dragging: false, // true if mouse is down
   origin_x: 0,
   origin_y: 0,
-  polygon_mode: false,
-  polygon_coordinates: [],
+  polygon_mode: false, // true if polygon mode is on. Polygon mode is a special mode that allows the user to draw a polygon
+  polygon_coordinates: [], // array of points that make up the polygon
   temp_vert: [],
   mode: "Draw", // draw, select
   change_vertex: 0, //the vertex that we want to transform
@@ -50,15 +50,23 @@ setMode(document.getElementById("mode").value);
 current.color = hexToColor(document.getElementById("color").value);
 
 // looking for a mousedown
+// this function will be called when the mouse is pressed down and mode is draw
 canvas.addEventListener("mousedown", function (e) {
   if (current.mode == "Draw") {
+    // get color from the color picker
     current.color = hexToColor(document.getElementById("color").value);
+    // set dragging to true
     current.dragging = true;
+    // record mouse coordinates
     recordMouse(e);
+    // if shape is not polygon, then just create a new shape
     if (current.shape != Polygon || current.polygon_mode == false) {
       current.origin_x = mouseX;
       current.origin_y = mouseY;
     }
+    //
+    // but if we want to draw a polygon, then we need to create a new polygon
+    //
     // check if polygon_mode is inactive before
     if (!current.polygon_mode) {
       // check if shape == polygon
@@ -89,11 +97,13 @@ canvas.addEventListener("mousedown", function (e) {
   }
 });
 
-// looking for a mouseup
+// looking for a mouseup\
+// this function will be called when the mouse is released and mode is draw
 canvas.addEventListener("mouseup", function (e) {
   if (current.mode == "Draw") {
+    // set dragging to false
     current.dragging = false;
-    //checking if current.shape is polygon or not
+    //checking if current.shape is polygon or not. if not, then create a new shape
     if (current.shape != Polygon) {
       shapes.push(
         new current.shape(
@@ -106,6 +116,7 @@ canvas.addEventListener("mouseup", function (e) {
         )
       );
     } else {
+      // if current.shape is polygon
       //curr.shape == Polygon
       current.polygon_mode = false;
       // check if mouse is close to origin x & y
@@ -133,6 +144,8 @@ canvas.addEventListener("mouseup", function (e) {
         // clean up polygon_coordinates
         current.polygon_coordinates = [];
       } else {
+        // if mouse is not close to origin x & y
+        // we will add the last coordinate to polygon_coordinates
         current.polygon_mode = true;
         current.polygon_coordinates = current.polygon_coordinates.concat([
           mouseX,
@@ -150,6 +163,7 @@ canvas.addEventListener("mouseup", function (e) {
             false
           )
         );
+        // this temp_vert will be the x1 and x2 for next vertex in polygon
         current.temp_vert = [mouseX, mouseY];
       }
     }
@@ -161,8 +175,10 @@ canvas.addEventListener("mouseup", function (e) {
 });
 
 // looking for a mousemove
+// this function will be called when the mouse is moved and mode is draw
 canvas.addEventListener("mousemove", function (e) {
   if (current.mode == "Draw") {
+    // if dragging is true, then draw a new shape (but not push to shapes array)
     if (current.dragging) {
       // record mouse position
       recordMouse(e);
@@ -194,7 +210,7 @@ canvas.addEventListener("mousemove", function (e) {
 });
 
 //
-// add event listener thingy
+// add event listener thingy for tools
 //
 
 document.getElementById("mode").addEventListener("click", function (e) {
@@ -229,7 +245,6 @@ document.getElementById("delLast").addEventListener("click", function (e) {
 
 // looking for a mousedown in canvas to select nearest shape
 // set the current.focus to the index of the nearest shape
-var idx_shape = -1;
 canvas.addEventListener("mousedown", function (e) {
   if (current.mode == "Select") {
     current.dragging = true;
@@ -238,12 +253,12 @@ canvas.addEventListener("mousedown", function (e) {
     var min_dist = Infinity;
     var temp_dist = Infinity;
     idx_shape = -1;
+    // temp_idx is the index that contain the temporary index of the closest vertex
     var temp_idx = -1;
     // looping through all of the shapes, searching the closest shape
     for (shape in shapes) {
       idx_shape++;
       // first case: shape is Line
-      // console.log(shapes[shape]);
       if (shapes[shape].name == "Line") {
         // get the distance between mouse and the shape using pythagoeran theorem
         temp_dist = Math.min(
@@ -254,7 +269,7 @@ canvas.addEventListener("mousedown", function (e) {
             (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y2) ** 2
           )
         );
-        // set change_vertex to smallest distance
+        // set temp_idx to smallest distance
         if (
           Math.sqrt(
             (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
@@ -264,7 +279,6 @@ canvas.addEventListener("mousedown", function (e) {
         } else {
           temp_idx = 1;
         }
-        console.log("the winner is: " + temp_idx);
       }
       // second case: shape is Square
       else if (shapes[shape].name == "Square") {
@@ -289,7 +303,7 @@ canvas.addEventListener("mousedown", function (e) {
             (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y1) ** 2
           )
         );
-        // set change_vertex to smallest distance
+        // set temp_idx to smallest distance
         if (
           Math.sqrt(
             (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
@@ -334,7 +348,7 @@ canvas.addEventListener("mousedown", function (e) {
             (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y1) ** 2
           )
         );
-        // set change_vertex to smallest distance
+        // set temp_idx to smallest distance
         if (
           Math.sqrt(
             (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
@@ -370,7 +384,7 @@ canvas.addEventListener("mousedown", function (e) {
           );
         }
         for (let i = 0; i < shapes[shape].points.length; i += 2) {
-          console.log(i);
+          // console.log(i);
           if (
             temp_dist ==
             Math.sqrt(
@@ -384,6 +398,8 @@ canvas.addEventListener("mousedown", function (e) {
       }
 
       // if the distance is smaller than the min_dist, set the min_dist to the distance
+      // and set the focus to the shape that we selected
+      // also set the change_vertex to the index of the closest vertex
       if (temp_dist < min_dist) {
         current.focus = idx_shape;
         min_dist = temp_dist;
@@ -392,12 +408,10 @@ canvas.addEventListener("mousedown", function (e) {
     }
     // the shape is selected
     // output is now current.focus is focus on that shape
-    // deleteShape = true;
   }
 });
 
 // looking for a mousemove to draw over the shape that is selected to our focus when mousedown
-var tempShape;
 canvas.addEventListener("mousemove", function (e) {
   if (current.mode == "Select") {
     if (current.dragging) {
@@ -410,22 +424,14 @@ canvas.addEventListener("mousemove", function (e) {
         return;
       }
 
-      // tempShape is a var that contains the shape that want to be removed
-
-      // tempShape = shapes[current.focus];
-      // deleteShape = false;
-
       // if the shape is Line
       if (shapes[current.focus].name == "Line") {
-        console.log(current.change_vertex);
         if (current.change_vertex == 0) {
           shapes[current.focus].x1 = mouseX;
           shapes[current.focus].y1 = mouseY;
-          console.log("asd");
         } else {
           shapes[current.focus].x2 = mouseX;
           shapes[current.focus].y2 = mouseY;
-          console.log("ouw");
         }
         redrawCanvas();
       }
@@ -460,73 +466,5 @@ canvas.addEventListener("mousemove", function (e) {
 canvas.addEventListener("mouseup", function (e) {
   if (current.mode == "Select") {
     current.dragging = false;
-    //     //checking if current.shape is polygon or not
-    //     if (current.shape != Polygon) {
-    //       shapes.push(
-    //         new current.shape(
-    //           current.origin_x,
-    //           current.origin_y,
-    //           mouseX,
-    //           mouseY,
-    //           current.color,
-    //           false
-    //         )
-    //       );
-    //     } else {
-    //       //curr.shape == Polygon
-    //       current.polygon_mode = false;
-    //       // check if mouse is close to origin x & y
-    //       if (
-    //         mouseX < current.origin_x + 0.1 &&
-    //         mouseX > current.origin_x - 0.1 &&
-    //         mouseY < current.origin_y + 0.1 &&
-    //         mouseY > current.origin_y - 0.1
-    //       ) {
-    //         // delete line according to polygon_coordinates
-    //         for (let i = 0; i < (current.polygon_coordinates.length - 2) / 2; i++) {
-    //           shapes.pop();
-    //         }
-    //         // add polygon to shapes
-    //         shapes.push(
-    //           new Polygon(
-    //             current.origin_x,
-    //             current.origin_y,
-    //             mouseX,
-    //             mouseY,
-    //             current.color,
-    //             current.polygon_coordinates
-    //           )
-    //         );
-    //         // clean up polygon_coordinates
-    //         current.polygon_coordinates = [];
-    //       } else {
-    //         current.polygon_mode = true;
-    //         current.polygon_coordinates = current.polygon_coordinates.concat([
-    //           mouseX,
-    //           mouseY,
-    //         ]);
-    //         //push line (for temporary display)
-    //         shapes.push(
-    //           new Line(
-    //             current.temp_vert[0],
-    //             current.temp_vert[1],
-    //             mouseX,
-    //             mouseY,
-    //             current.color,
-    //             false
-    //           )
-    //         );
-    //         current.temp_vert = [mouseX, mouseY];
-    //       }
-    //     }
-    //     redrawCanvas();
-    //     console.log(shapes);
-    //     current.focus = shapes.length - 1;
   }
 });
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Batas work in progress
