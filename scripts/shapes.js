@@ -65,6 +65,7 @@ class Line extends Shape {
 class Square extends Shape {
   constructor(x1, y1, x2, y2, color) {
     super(x1, y1, x2, y2, color, "Square");
+    this.position = [];
   }
   // draw method
   draw() {
@@ -72,15 +73,33 @@ class Square extends Shape {
     let y1 = this.y1;
     let x2 = this.x2;
     let y2 = this.y2;
-    this.materialized(
-      [
-        [x1, y1],
-        [x1, y1 - (x2 - x1)],
-        [x2, y1 - (x2 - x1)],
-        [x2, y1],
-      ],
-      gl.LINE_LOOP
-    );
+
+    let dx = x2 - x1;
+    let dy = y2 - y1;
+    // select the minimum value of dx and dy
+    let d = Math.min(Math.abs(dx) + Math.abs(dy));
+    // set dx and dy to become d
+    if (dx > 0) {
+      dx = d;
+    } else {
+      dx = -d;
+    }
+
+    if (dy > 0) {
+      dy = d;
+    } else {
+      dy = -d;
+    }
+
+    // set the position of the square
+    this.position = [
+      [x1, y1],
+      [x1, y1 + dy],
+      [x1 + dx, y1 + dy],
+      [x1 + dx, y1],
+    ];
+
+    this.materialized(this.position, gl.LINE_LOOP);
   }
 }
 
