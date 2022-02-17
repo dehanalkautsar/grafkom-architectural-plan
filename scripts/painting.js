@@ -238,6 +238,7 @@ canvas.addEventListener("mousedown", function (e) {
     var min_dist = Infinity;
     var temp_dist = Infinity;
     idx_shape = -1;
+    var temp_idx = -1;
     // looping through all of the shapes, searching the closest shape
     for (shape in shapes) {
       idx_shape++;
@@ -259,10 +260,11 @@ canvas.addEventListener("mousedown", function (e) {
             (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
           ) == temp_dist
         ) {
-          current.change_vertex = 0;
+          temp_idx = 0;
         } else {
-          current.change_vertex = 1;
+          temp_idx = 1;
         }
+        console.log("the winner is: " + temp_idx);
       }
       // second case: shape is Square
       else if (shapes[shape].name == "Square") {
@@ -293,7 +295,7 @@ canvas.addEventListener("mousedown", function (e) {
             (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
           ) == temp_dist
         ) {
-          current.change_vertex = 0;
+          temp_idx = 0;
         } else if (
           Math.sqrt(
             (mouseX - shapes[shape].x1) ** 2 +
@@ -302,7 +304,7 @@ canvas.addEventListener("mousedown", function (e) {
                 2
           ) == temp_dist
         ) {
-          current.change_vertex = 1;
+          temp_idx = 1;
         } else if (
           Math.sqrt(
             (mouseX - shapes[shape].x2) ** 2 +
@@ -311,9 +313,9 @@ canvas.addEventListener("mousedown", function (e) {
                 2
           ) == temp_dist
         ) {
-          current.change_vertex = 2;
+          temp_idx = 2;
         } else {
-          current.change_vertex = 3;
+          temp_idx = 3;
         }
       }
       // third case: shape is Rectangle
@@ -338,27 +340,27 @@ canvas.addEventListener("mousedown", function (e) {
             (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
           ) == temp_dist
         ) {
-          current.change_vertex = 0;
+          temp_idx = 0;
         } else if (
           Math.sqrt(
             (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y2) ** 2
           ) == temp_dist
         ) {
-          current.change_vertex = 1;
+          temp_idx = 1;
         } else if (
           Math.sqrt(
             (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y2) ** 2
           ) == temp_dist
         ) {
-          current.change_vertex = 2;
+          temp_idx = 2;
         } else {
-          current.change_vertex = 3;
+          temp_idx = 3;
         }
       }
       // fourth case: shape is Polygon
       else {
         temp_dist = Infinity;
-        for (let i = 0; i <= shapes[shape].points.length; i += 2) {
+        for (let i = 0; i < shapes[shape].points.length; i += 2) {
           temp_dist = Math.min(
             Math.sqrt(
               (mouseX - shapes[shape].points[i]) ** 2 +
@@ -366,6 +368,9 @@ canvas.addEventListener("mousedown", function (e) {
             ),
             temp_dist
           );
+        }
+        for (let i = 0; i < shapes[shape].points.length; i += 2) {
+          console.log(i);
           if (
             temp_dist ==
             Math.sqrt(
@@ -373,7 +378,7 @@ canvas.addEventListener("mousedown", function (e) {
                 (mouseY - shapes[shape].points[i + 1]) ** 2
             )
           ) {
-            current.change_vertex = i;
+            temp_idx = i;
           }
         }
       }
@@ -382,6 +387,7 @@ canvas.addEventListener("mousedown", function (e) {
       if (temp_dist < min_dist) {
         current.focus = idx_shape;
         min_dist = temp_dist;
+        current.change_vertex = temp_idx;
       }
     }
     // the shape is selected
@@ -411,102 +417,40 @@ canvas.addEventListener("mousemove", function (e) {
 
       // if the shape is Line
       if (shapes[current.focus].name == "Line") {
+        console.log(current.change_vertex);
         if (current.change_vertex == 0) {
           shapes[current.focus].x1 = mouseX;
           shapes[current.focus].y1 = mouseY;
+          console.log("asd");
         } else {
           shapes[current.focus].x2 = mouseX;
           shapes[current.focus].y2 = mouseY;
+          console.log("ouw");
         }
         redrawCanvas();
       }
-      // if the shape is Square
-      else if (tempShape.name == "Square") {
-        // set new anchor
-        let new_anchor = tempShape.position[(current.change_vertex + 2) % 4];
-        let dx, dy;
-
-        // distance between new anchor and mouse
-        dx = mouseX - new_anchor[0];
-        dy = mouseY - new_anchor[1];
-        // select the minimum value of dx and dy
-        let d = Math.min(Math.abs(dx) + Math.abs(dy));
-        // set dx and dy to become d
-        if (dx > 0) {
-          dx = d;
-        } else {
-          dx = -d;
-        }
-
-        if (dy > 0) {
-          dy = d;
-        } else {
-          dy = -d;
-        }
-
+      // if the shape is Square or Rectangle
+      else if (
+        shapes[current.focus].name == "Square" ||
+        shapes[current.focus].name == "Rectangle"
+      ) {
         if (current.change_vertex == -1) {
-          tempShape.x2 = mouseX;
-          tempShape.y2 = mouseY;
-        } else if (current.change_vertex == 0) {
-          //distance between new anchor (2) and mouse
-          tempShape.x1 = tempShape.x1 - dx;
-          tempShape.y1 = tempShape.y1 + dy;
-          tempShape.x2 = mouseX;
-          tempShape.y2 = mouseY;
-          console.log(tempShape.x1, tempShape.y1, tempShape.x2, tempShape.y2);
-          console.log("mas");
-        } else if (current.change_vertex == 1) {
-          // tempShape.x1 = mouseX;
-          // tempShape.y1 = mouseY - (tempShape.x2 - tempShape.x1);
-          tempShape.x2 = mouseX;
-          tempShape.y2 = mouseY;
-        } else if (current.change_vertex == 2) {
-          // tempShape.x2 = mouseX;
-          // tempShape.y1 = mouseY - (tempShape.x2 - tempShape.x1);
-          tempShape.x2 = mouseX;
-          tempShape.y2 = mouseY;
+          shapes[current.focus].x2 = mouseX;
+          shapes[current.focus].y2 = mouseY;
         } else {
-          tempShape.x2 = mouseX;
-          tempShape.y2 = mouseY;
+          shapes[current.focus].x1 =
+            shapes[current.focus].position[(current.change_vertex + 2) % 4][0];
+          shapes[current.focus].y1 =
+            shapes[current.focus].position[(current.change_vertex + 2) % 4][1];
+          shapes[current.focus].x2 = mouseX;
+          shapes[current.focus].y2 = mouseY;
         }
-        new Square(
-          tempShape.x1,
-          tempShape.y1,
-          tempShape.x2,
-          tempShape.y2,
-          false
-        ).draw();
         current.change_vertex = -1;
       }
-      // if the shape is Rectangle
-      else if (tempShape.name == "Rectangle") {
-        if (current.change_vertex == 0) {
-          // tempShape.x1 = mouseX;
-          // tempShape.y1 = mouseY;
-          tempShape.x2 = mouseX;
-          tempShape.y2 = mouseY;
-        } else if (current.change_vertex == 1) {
-          tempShape.y1 = mouseY;
-        } else if (current.change_vertex == 2) {
-          tempShape.x2 = mouseX;
-          tempShape.y2 = mouseY;
-        } else {
-          tempShape.x1 = mouseX;
-          tempShape.y2 = mouseY;
-        }
-        new Rectangle(
-          tempShape.x1,
-          tempShape.y1,
-          tempShape.x2,
-          tempShape.y2,
-          false
-        ).draw();
-      }
       // if the shape is Polygon
-      else if (tempShape == Polygon) {
-        tempShape.points[current.change_vertex] = mouseX;
-        tempShape.points[current.change_vertex + 1] = mouseY;
-        new tempShape.draw();
+      else if (shapes[current.focus].name == "Polygon") {
+        shapes[current.focus].points[current.change_vertex] = mouseX;
+        shapes[current.focus].points[current.change_vertex + 1] = mouseY;
       }
     }
   }

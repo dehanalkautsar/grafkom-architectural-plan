@@ -114,15 +114,18 @@ class Rectangle extends Shape {
     let y1 = this.y1;
     let x2 = this.x2;
     let y2 = this.y2;
-    this.materialized(
-      [
-        [x1, y1],
-        [x1, y2],
-        [x2, y2],
-        [x2, y1],
-      ],
-      gl.LINE_LOOP
-    );
+
+    let dx = x2 - x1;
+    let dy = y2 - y1;
+
+    this.position = [
+      [x1, y1],
+      [x1, y2],
+      [x2, y2],
+      [x2, y1],
+    ];
+
+    this.materialized(this.position, gl.LINE_LOOP);
   }
 }
 
