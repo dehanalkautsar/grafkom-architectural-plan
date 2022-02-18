@@ -8,5 +8,7 @@ canvas {
   background-color: #fff;
   float: left;
   margin-right: 10px;
+  margin-bottom: 10px;
   cursor: crosshair;
+  box-shadow: 0 0 10px #000;
 }
