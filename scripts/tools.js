@@ -52,3 +52,14 @@ function setMode(mode) {
       ? "Select"
       : (console.log("NO SUCH MODE"), "Draw");
 }
+
+// setFill: bool -> void
+// this function will set the current mode to the mode that is passed in
+function setFill(fill) {
+  current.fill =
+    fill == true
+      ? true
+      : fill == false
+      ? false
+      : (console.log("NO SUCH Fill type"), false);
+}

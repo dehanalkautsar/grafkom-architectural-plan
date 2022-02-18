@@ -21,6 +21,7 @@ var current = {
   dragging: false, // true if mouse is down
   origin_x: 0,
   origin_y: 0,
+  fill: false,
   polygon_mode: false, // true if polygon mode is on. Polygon mode is a special mode that allows the user to draw a polygon
   polygon_coordinates: [], // array of points that make up the polygon
   temp_vert: [],
@@ -112,6 +113,7 @@ canvas.addEventListener("mouseup", function (e) {
           mouseX,
           mouseY,
           current.color,
+          current.fill,
           false
         )
       );
@@ -138,7 +140,8 @@ canvas.addEventListener("mouseup", function (e) {
             mouseX,
             mouseY,
             current.color,
-            current.polygon_coordinates
+            current.polygon_coordinates,
+            current.fill
           )
         );
         // clean up polygon_coordinates
@@ -169,7 +172,6 @@ canvas.addEventListener("mouseup", function (e) {
     }
 
     redrawCanvas();
-    console.log(shapes);
     current.focus = shapes.length - 1;
   }
 });
@@ -191,7 +193,8 @@ canvas.addEventListener("mousemove", function (e) {
           current.origin_y,
           mouseX,
           mouseY,
-          current.color
+          current.color,
+          current.fill
         ).draw();
       } else {
         //curr.shape == Polygon
@@ -201,7 +204,8 @@ canvas.addEventListener("mousemove", function (e) {
             current.temp_vert[1],
             mouseX,
             mouseY,
-            current.color
+            current.color,
+            current.fill
           ).draw();
         }
       }
@@ -216,6 +220,10 @@ canvas.addEventListener("mousemove", function (e) {
 document.getElementById("mode").addEventListener("click", function (e) {
   mode = document.getElementById("mode").value;
   setMode(mode);
+  document.getElementById("shape").value = "Line";
+  setShape("Line");
+  current.polygon_mode = false;
+  current.polygon_coordinates = [];
 });
 
 document.getElementById("shape").addEventListener("click", function (e) {
@@ -227,11 +235,21 @@ document.getElementById("shape").addEventListener("click", function (e) {
     current.polygon_coordinates = [];
   }
 });
+// fill shape with color
+document.getElementById("fill").addEventListener("click", function (e) {
+  fill = document.getElementById("fill").checked;
+  setFill(fill);
+  current.polygon_mode = false;
+  current.polygon_coordinates = [];
+});
+
 // Pop last shape
 document.getElementById("delLast").addEventListener("click", function (e) {
   shapes.pop();
   current.focus = shapes.length - 1;
   current.draw_mode = false;
+  current.polygon_mode = false;
+  current.polygon_coordinates = [];
   redrawCanvas();
 });
 

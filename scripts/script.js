@@ -42,8 +42,6 @@ function initWebGL() {
   if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
     console.error("ERROR validating program!", gl.getProgramInfoLog(program));
     return;
-  } else {
-    console.log("all good until validating program");
   }
 }
 

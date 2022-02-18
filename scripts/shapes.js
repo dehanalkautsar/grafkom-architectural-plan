@@ -42,7 +42,7 @@ class Shape {
 
 // line class
 class Line extends Shape {
-  constructor(x1, y1, x2, y2, color, dummy) {
+  constructor(x1, y1, x2, y2, color, filled, dummy) {
     super(x1, y1, x2, y2, color, "Line", false);
   }
   // draw method
@@ -63,9 +63,10 @@ class Line extends Shape {
 
 // square class
 class Square extends Shape {
-  constructor(x1, y1, x2, y2, color) {
+  constructor(x1, y1, x2, y2, color, filled) {
     super(x1, y1, x2, y2, color, "Square");
     this.position = [];
+    this.filled = filled;
   }
   // draw method
   draw() {
@@ -100,14 +101,18 @@ class Square extends Shape {
       [x1 + dx, y1],
     ];
 
-    this.materialized(this.position, gl.LINE_LOOP);
+    this.materialized(
+      this.position,
+      this.filled ? gl.TRIANGLE_FAN : gl.LINE_LOOP
+    );
   }
 }
 
 // rectangle class
 class Rectangle extends Shape {
-  constructor(x1, y1, x2, y2, color) {
+  constructor(x1, y1, x2, y2, color, filled) {
     super(x1, y1, x2, y2, color, "Rectangle");
+    this.filled = filled;
   }
   // draw method
   draw() {
@@ -123,15 +128,19 @@ class Rectangle extends Shape {
       [x2, y1],
     ];
 
-    this.materialized(this.position, gl.LINE_LOOP);
+    this.materialized(
+      this.position,
+      this.filled ? gl.TRIANGLE_FAN : gl.LINE_LOOP
+    );
   }
 }
 
 // polygon class
 class Polygon extends Shape {
-  constructor(x1, y1, x2, y2, color, points) {
+  constructor(x1, y1, x2, y2, color, points, filled) {
     super(x1, y1, 0, 0, color, "Polygon");
     this.points = points;
+    this.filled = filled;
   }
   // draw method
   draw() {
@@ -140,6 +149,9 @@ class Polygon extends Shape {
     for (let i = 0; i < this.points.length; i += 2) {
       poly_vertices.push([this.points[i], this.points[i + 1]]);
     }
-    this.materialized(poly_vertices, gl.LINE_LOOP);
+    this.materialized(
+      poly_vertices,
+      this.filled ? gl.TRIANGLE_FAN : gl.LINE_LOOP
+    );
   }
 }
