@@ -123,10 +123,10 @@ canvas.addEventListener("mouseup", function (e) {
       current.polygon_mode = false;
       // check if mouse is close to origin x & y
       if (
-        mouseX < current.origin_x + 0.1 &&
-        mouseX > current.origin_x - 0.1 &&
-        mouseY < current.origin_y + 0.1 &&
-        mouseY > current.origin_y - 0.1
+        mouseX < current.origin_x + 0.05 &&
+        mouseX > current.origin_x - 0.05 &&
+        mouseY < current.origin_y + 0.05 &&
+        mouseY > current.origin_y - 0.05
       ) {
         // delete line according to polygon_coordinates
         for (let i = 0; i < (current.polygon_coordinates.length - 2) / 2; i++) {
@@ -404,7 +404,6 @@ canvas.addEventListener("mousedown", function (e) {
           );
         }
         for (let i = 0; i < shapes[shape].points.length; i += 2) {
-          // console.log(i);
           if (
             temp_dist ==
             Math.sqrt(
@@ -630,7 +629,6 @@ canvas.addEventListener("click", function (e) {
           );
         }
         for (let i = 0; i < shapes[shape].points.length; i += 2) {
-          // console.log(i);
           if (
             temp_dist ==
             Math.sqrt(
@@ -677,4 +675,82 @@ document.getElementById("color").addEventListener("change", function (e) {
       alert("Please select a shape first!");
     }
   }
+});
+
+///////////////////////////////////////////
+//////////// save & load files ////////////
+///////////////////////////////////////////
+
+// saving file
+document.getElementById("save").addEventListener("click", function (e) {
+  download(shapes, "shapes.json", "text/plain");
+});
+
+// loading file
+document.getElementById("load").addEventListener("change", function (e) {
+  // read the file
+  let reader = new FileReader();
+  reader.readAsText(e.target.files[0]);
+  // when the file is read
+  reader.onload = function (e) {
+    // parse the file data
+    let data = JSON.parse(e.target.result);
+    // set the shapes to the data
+    shapes = [];
+    // make json data become an array
+    for (d in data) {
+      // push the shape to the shapes array
+      if (data[d].name == "Line") {
+        shapes.push(
+          new Line(
+            data[d].x1,
+            data[d].y1,
+            data[d].x2,
+            data[d].y2,
+            data[d].color,
+            data[d].filled,
+            false
+          )
+        );
+      } else if (data[d].name == "Square") {
+        shapes.push(
+          new Square(
+            data[d].x1,
+            data[d].y1,
+            data[d].x2,
+            data[d].y2,
+            data[d].color,
+            data[d].filled,
+            false
+          )
+        );
+      } else if (data[d].name == "Rectangle") {
+        shapes.push(
+          new Rectangle(
+            data[d].x1,
+            data[d].y1,
+            data[d].x2,
+            data[d].y2,
+            data[d].color,
+            data[d].filled,
+            false
+          )
+        );
+      } else if (data[d].name == "Polygon") {
+        shapes.push(
+          new Polygon(
+            data[d].x1,
+            data[d].y1,
+            data[d].x2,
+            data[d].y2,
+            data[d].color,
+            data[d].points,
+            data[d].filled
+          )
+        );
+      }
+    }
+    // redraw the canvas
+    redrawCanvas();
+  };
 });

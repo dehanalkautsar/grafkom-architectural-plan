@@ -63,3 +63,13 @@ function setFill(fill) {
       ? false
       : (console.log("NO SUCH Fill type"), false);
 }
+
+// download: array -> string -> string -> void
+// this function will download the array of vertices to a file
+function download(shapes, fileName, extension) {
+  var a = document.createElement("a");
+  var file = new Blob([JSON.stringify(shapes)], { type: extension });
+  a.href = URL.createObjectURL(file);
+  a.download = fileName;
+  a.click();
+}
