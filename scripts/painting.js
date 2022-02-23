@@ -224,6 +224,7 @@ document.getElementById("mode").addEventListener("click", function (e) {
   setShape("Line");
   current.polygon_mode = false;
   current.polygon_coordinates = [];
+  current.focus = -1;
 });
 
 document.getElementById("shape").addEventListener("click", function (e) {
@@ -265,6 +266,7 @@ document.getElementById("delLast").addEventListener("click", function (e) {
 // set the current.focus to the index of the nearest shape
 canvas.addEventListener("mousedown", function (e) {
   if (current.mode == "Select") {
+    current.focus = -1;
     current.dragging = true;
     recordMouse(e);
     // init min_dist as the distance between mouse and the shape
@@ -484,5 +486,195 @@ canvas.addEventListener("mousemove", function (e) {
 canvas.addEventListener("mouseup", function (e) {
   if (current.mode == "Select") {
     current.dragging = false;
+  }
+});
+
+// looking for a click in canvas to select nearest shape
+// set the current.focus to the index of the nearest shape
+canvas.addEventListener("click", function (e) {
+  if (current.mode == "Select") {
+    current.focus = -1;
+    recordMouse(e);
+    // init min_dist as the distance between mouse and the shape
+    var min_dist = Infinity;
+    var temp_dist = Infinity;
+    idx_shape = -1;
+    // temp_idx is the index that contain the temporary index of the closest vertex
+    var temp_idx = -1;
+    // looping through all of the shapes, searching the closest shape
+    for (shape in shapes) {
+      idx_shape++;
+      // first case: shape is Line
+      if (shapes[shape].name == "Line") {
+        // get the distance between mouse and the shape using pythagoeran theorem
+        temp_dist = Math.min(
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          ),
+          Math.sqrt(
+            (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y2) ** 2
+          )
+        );
+        // set temp_idx to smallest distance
+        if (
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          ) == temp_dist
+        ) {
+          temp_idx = 0;
+        } else {
+          temp_idx = 1;
+        }
+      }
+      // second case: shape is Square
+      else if (shapes[shape].name == "Square") {
+        // get the distance between mouse and the shape using pythagoeran theorem
+        temp_dist = Math.min(
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          ),
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 +
+              (mouseY -
+                (shapes[shape].y1 - (shapes[shape].x2 - shapes[shape].x1))) **
+                2
+          ), //y1 - (x2 - x1)
+          Math.sqrt(
+            (mouseX - shapes[shape].x2) ** 2 +
+              (mouseY -
+                (shapes[shape].y1 - (shapes[shape].x2 - shapes[shape].x1))) **
+                2
+          ), //y1 - (x2 - x1)
+          Math.sqrt(
+            (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          )
+        );
+        // set temp_idx to smallest distance
+        if (
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          ) == temp_dist
+        ) {
+          temp_idx = 0;
+        } else if (
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 +
+              (mouseY -
+                (shapes[shape].y1 - (shapes[shape].x2 - shapes[shape].x1))) **
+                2
+          ) == temp_dist
+        ) {
+          temp_idx = 1;
+        } else if (
+          Math.sqrt(
+            (mouseX - shapes[shape].x2) ** 2 +
+              (mouseY -
+                (shapes[shape].y1 - (shapes[shape].x2 - shapes[shape].x1))) **
+                2
+          ) == temp_dist
+        ) {
+          temp_idx = 2;
+        } else {
+          temp_idx = 3;
+        }
+      }
+      // third case: shape is Rectangle
+      else if (shapes[shape].name == "Rectangle") {
+        temp_dist = Math.min(
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y2) ** 2
+          ),
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          ),
+          Math.sqrt(
+            (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y2) ** 2
+          ),
+          Math.sqrt(
+            (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          )
+        );
+        // set temp_idx to smallest distance
+        if (
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y1) ** 2
+          ) == temp_dist
+        ) {
+          temp_idx = 0;
+        } else if (
+          Math.sqrt(
+            (mouseX - shapes[shape].x1) ** 2 + (mouseY - shapes[shape].y2) ** 2
+          ) == temp_dist
+        ) {
+          temp_idx = 1;
+        } else if (
+          Math.sqrt(
+            (mouseX - shapes[shape].x2) ** 2 + (mouseY - shapes[shape].y2) ** 2
+          ) == temp_dist
+        ) {
+          temp_idx = 2;
+        } else {
+          temp_idx = 3;
+        }
+      }
+      // fourth case: shape is Polygon
+      else {
+        temp_dist = Infinity;
+        for (let i = 0; i < shapes[shape].points.length; i += 2) {
+          temp_dist = Math.min(
+            Math.sqrt(
+              (mouseX - shapes[shape].points[i]) ** 2 +
+                (mouseY - shapes[shape].points[i + 1]) ** 2
+            ),
+            temp_dist
+          );
+        }
+        for (let i = 0; i < shapes[shape].points.length; i += 2) {
+          // console.log(i);
+          if (
+            temp_dist ==
+            Math.sqrt(
+              (mouseX - shapes[shape].points[i]) ** 2 +
+                (mouseY - shapes[shape].points[i + 1]) ** 2
+            )
+          ) {
+            temp_idx = i;
+          }
+        }
+      }
+
+      // if the distance is smaller than the min_dist, set the min_dist to the distance
+      // and set the focus to the shape that we selected
+      // also set the change_vertex to the index of the closest vertex
+      if (temp_dist < min_dist) {
+        current.focus = idx_shape;
+        min_dist = temp_dist;
+        current.change_vertex = temp_idx;
+      }
+    }
+    // the shape is selected
+    // output is now current.focus is focus on that shape
+  }
+});
+
+//////////////////////////////////
+//////////// coloring ////////////
+//////////////////////////////////
+
+// change the selected shape color to what users want
+document.getElementById("color").addEventListener("change", function (e) {
+  // first of first, check if selected mode is active
+  if (current.mode == "Select") {
+    // check if the shape is selected
+    if (current.focus != -1) {
+      // change the color of the shape
+      shapes[current.focus].color = hexToColor(
+        document.getElementById("color").value
+      );
+      current.color = hexToColor(document.getElementById("color").value);
+      redrawCanvas();
+    } else {
+      alert("Please select a shape first!");
+    }
   }
 });
