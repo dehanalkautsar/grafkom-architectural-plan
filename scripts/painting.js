@@ -681,13 +681,31 @@ document.getElementById("color").addEventListener("change", function (e) {
 //////////// save & load files ////////////
 ///////////////////////////////////////////
 
-// saving file
-document.getElementById("save").addEventListener("click", function (e) {
-  download(shapes, "shapes.json", "text/plain");
+// downloading file
+document.getElementById("save-as").addEventListener("click", function (e) {
+  let namafile = document.getElementById('filename').value;
+  if (namafile == "") {
+    namafile = "Untitled";
+  }
+  if (namafile.slice(namafile.length-5) != ".json") {
+    namafile += ".json";
+  }
+  download(shapes, namafile, "text/plain");
 });
+
+document.getElementById("filename").addEventListener("change", function(e){
+  let judul = e.target.value;
+  document.getElementById('filename').value = judul;
+  document.querySelector('title').textContent = judul  + " | 2D Web Based CAD (Computer-Aided Design)";
+  document.querySelector('h1').textContent = judul;
+})
 
 // loading file
 document.getElementById("load").addEventListener("change", function (e) {
+  let judul = e.target.value.slice(12)
+  document.getElementById('filename').value = judul;
+  document.querySelector('title').textContent = judul  + " | 2D Web Based CAD (Computer-Aided Design)";
+  document.querySelector('h1').textContent = judul;
   // read the file
   let reader = new FileReader();
   reader.readAsText(e.target.files[0]);

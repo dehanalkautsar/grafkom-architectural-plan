@@ -66,10 +66,20 @@ function setFill(fill) {
 
 // download: array -> string -> string -> void
 // this function will download the array of vertices to a file
-function download(shapes, fileName, extension) {
-  var a = document.createElement("a");
-  var file = new Blob([JSON.stringify(shapes)], { type: extension });
-  a.href = URL.createObjectURL(file);
-  a.download = fileName;
-  a.click();
+function download(data, filename, type) {
+  var file = new Blob([JSON.stringify(data)], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
 }
