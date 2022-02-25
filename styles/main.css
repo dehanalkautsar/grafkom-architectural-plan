@@ -34,6 +34,7 @@ font-size: 0.9em;
 font-size: 20px;
 text-align: center;
 
+
 }
 
 *{
@@ -283,6 +284,11 @@ section{
 .judull{  
     font-size: 24px;
     text-align: center;    
+}
+
+.judul{  
+    font-size: 30px;
+    text-align: center;
 }
 
 .column {
