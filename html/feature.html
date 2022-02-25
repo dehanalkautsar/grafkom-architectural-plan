@@ -1,0 +1,91 @@
+<html>
+  <head>
+    <title>2D Web Based CAD (Computer-Aided Design)</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../styles/main.css">
+  </head>
+  <body>
+    <input type="checkbox" id="check">
+    <label for="check">
+        <i class="fas fa-bars" id="btn"></i>
+        <i class="fas fa-times" id="cancel"></i>
+    </label>
+    <div class="sidebar">
+        <header>GrafKom</header>
+        <ul>
+            <li><a href="./help.html"><i class="fas fa-qrcode"></i>Help</a></li>
+            <li><a href="#"><i class="fas fa-link"></i>Features</a></li>
+            <li><a href="./help.html"><i class="fas fa-stream"></i>Help</a></li>
+            <li><a href="#"><i class="fas fa-calendar-week"></i>Events</a></li>
+            <li><a href="#"><i class="fas fa-question-circle"></i>About</a></li>
+            <li><a href="#"><i class="fas fa-sliders-h"></i> Services</a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i>Contacts</a></li>
+        </ul>
+    </div>
+    <section class="section2">
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <h2 class="titlee">2D Web Based CAD (Computer-Aided Design)</h2>
+      <div class="container">
+        <br/>
+        <div class="row">
+          <div class="col">
+            <select id="mode">
+              <option value="Draw">Draw Mode</option>
+              <option value="Select">Select Mode</option>
+            </select>
+            <select id="shape">
+              <option value="Line">Garis</option>
+              <option value="Square">Persegi</option>
+              <option value="Rectangle">Persegi Panjang</option>
+              <option value="Polygon">Polygon</option>
+            </select>
+            <input type="color" id="color" value="#000000" />
+            <input type="checkbox" text="fill" id="fill"><span>Fill Shape with Color</span>
+            <button id="delLast">delLast</button>
+            <input type="file" id="load" accept=".json,application/json">
+            <button id="save">Save</button>
+          </div>
+        </div>
+        <div class="row">
+            <canvas id="canvas" width="900" height="900"></canvas>
+            <div style="margin-left: 10px;">
+            </div>
+          </div>
+        </div>
+
+        <script id="vertex-shader-2d" type="x-shader/x-vertex">
+          precision mediump float;
+
+          attribute vec2 vertPosition;
+          attribute vec3 vertColor;
+          varying vec3 fragColor;
+          void main()
+          {
+            fragColor = vertColor;
+            gl_Position = vec4(vertPosition, 0.0, 1.0);
+          }
+        </script>
+        <script id="fragment-shader-2d" type="x-shader/x-fragment">
+          precision mediump float;
+
+          varying vec3 fragColor;
+          void main()
+          {
+            gl_FragColor = vec4(fragColor, 1.0);
+          }
+        </script>
+        <script src="../scripts/webgl-utils.js"></script>
+        <script src="../scripts/script.js"></script>
+        <script src="../scripts/shapes.js"></script>
+        <script src="../scripts/tools.js"></script>
+        <script src="../scripts/painting.js"></script>
+        <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+        <!-- <script>redrawCanvas();</script> -->
+      </div>
+    </section>
+  </body>
+</html>

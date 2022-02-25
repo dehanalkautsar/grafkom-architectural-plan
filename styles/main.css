@@ -1,0 +1,320 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital@0;1&family=Roboto:wght@100;300&display=swap');
+
+body{
+    font-family: 'Poppins', sans-serif;
+}
+
+canvas {
+    border: 1px solid #000;
+    background-color: #fff;
+    float: left;
+    margin-right: 30px;
+    margin-bottom: 10px;
+    cursor: crosshair;
+    box-shadow: 0 0 10px #000;
+  }
+  
+h3 {
+font-size: 1.1em;
+}
+
+h4 {
+font-size: 0.9em;
+}
+
+p {
+font-size: 0.9em;
+}
+
+ol {
+font-size: 0.9em;
+}
+
+.titlee{  
+font-size: 20px;
+text-align: center;
+
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+
+.sidebar{
+    position: fixed;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background: #161623;
+    /*background: #042331;*/
+    transition: all .5s ease;
+}
+
+.sidebar header{
+    font-size: 22px;
+    color: white;
+    text-align: center;
+    line-height: 150px;
+    background: linear-gradient(#2196f3, #e91e63);
+    /*background: #063146;*/
+    user-select: none;
+}
+
+.sidebar ul a{
+    display: block;
+    height: 100%;
+    width: 100%;
+    line-height: 65px;
+    font-size: 20px;
+    color: white;
+    padding-left: 40px;
+    box-sizing: border-box;
+    border-top: 1px solid rgba(255,255,255,.1);
+    border-bottom: 1px solid black;
+    transition: .4s;
+}
+
+ul li:hover a{
+    padding-left: 50px;
+}
+
+.sidebar ul a i{
+    margin-right: 16px;
+}
+
+#check{
+    display: none;
+}
+
+label #btn, label #cancel{
+    position: absolute;
+    cursor: pointer;
+    background: #042331;
+    border-radius: 3px;
+}
+
+label #btn {
+    left: 40px;
+    top: 25px;
+    font-size: 35px;
+    color: white;
+    padding: 6px 12px;
+    transition: all .5s;
+}
+
+label #cancel{
+    z-index: 1111;
+    left: -195px;
+    top: 17px;
+    font-size: 30px;
+    color: #0a5275;
+    padding: 4px 9px;
+    transition: all .5s ease;
+}
+
+#check:checked ~ .sidebar{
+    left:0;
+}
+
+#check:checked ~ label #btn{
+    left: 250px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#check:checked ~ label #cancel{
+    left: 195px;
+}
+
+#check:checked ~ section{
+    margin-left: 250px;
+}
+
+section{
+    transition: all.5s;
+}
+
+.section1{
+    transition: all.5s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    background: #161623;
+    min-height: 100vh;
+}
+
+.section1::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(#f00, #f0f);
+    clip-path: circle(30% at right 70%);
+}
+
+.section1::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 250px;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(#2196f3, #e91e63);
+    clip-path: circle(20% at 10% 70%);
+}
+
+.container{
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 40px 0;
+}
+
+.container2{
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+}
+
+.container .card{
+    position: relative;
+    width: 300px;
+    height: 400px;
+    background: rgba(255,255,255,0.05);
+    margin: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+}
+
+.container .card .content {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    opacity: 0.5;
+    transition: 0.5s;
+}
+
+.container .card:hover .content{
+    opacity: 1;
+    transform: translateY(-20px);
+}
+
+.container .card .content .imgBx{
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 10px solid rgba(0,0,0,0.25);
+}
+
+.container .card .content .imgBx img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.container .card .content .contentBx h3{
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+    font-size: 18px;
+    text-align: center;
+    line-height: 1.1em;
+}
+
+.container .card .content .contentBx h3 span{
+    font-size: 12px;
+    font-weight: 300;
+    text-transform: initial;
+}
+
+.container .card .sci{
+    position: absolute;
+    bottom: 50px;
+    display: flex;
+}
+
+.container .card .sci li{
+    list-style: none;
+    margin: 0 10px;
+    transform: translateY(40px);
+    transition: 0.5s;
+    transition-delay: calc(0.1s * var(--i));
+}
+
+.section2{
+    justify-content: center;
+    align-items: center;
+    background: #161623;
+    min-height: 200vh;
+    color: white;
+}
+
+.section3{
+    justify-content: center;
+    align-items: center;
+    background: #161623;
+    min-height: 150vh;
+    color: black;
+    box-sizing: border-box;
+}
+
+.judull{  
+    font-size: 24px;
+    text-align: center;    
+}
+
+.column {
+    float: left;
+    width: 50%;
+  }
+  
+  /* Clear floats after the columns */
+.rowS:after {
+content: "";
+display: table;
+clear: both;
+}
+
+.cards {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+    padding: 16px;
+    text-align: center;
+    justify-content: center;
+    background-color: #f1f1f1;
+    border-radius: 15px;
+    height: 200px;
+    margin-left: 60px;
+    margin-right: 60px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.section3 h3{
+    color: white;
+}
+
+.desc1{
+    text-align: left;
+}
